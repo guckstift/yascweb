@@ -32,6 +32,9 @@ function Game (props)
 	this.touchRelX = 0;
 	this.touchRelY = 0;
 	
+	this.loadingObjs = [];
+	this.cache = {};
+	
 	this.create = new Factory (this);
 	
 	if (this.canvasId) {

@@ -9,7 +9,7 @@ function Yasc ()
 		canvasId: "viewport",
 		bgColor: [0, 0.5, 0.5, 1],
 	});
-	
+
 	this.moving = false;
 	this.twoTouchDist= 0;
 }
@@ -125,5 +125,4 @@ Yasc.prototype.zoomCamera = function (dist)
 {
 	this.camera.setZoom (this.camera.zoom + dist);
 }
-
 

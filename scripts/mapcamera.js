@@ -20,7 +20,6 @@ MapCamera.prototype.update = function ()
 		this.zoom * 2 / this.game.size [1],
 	0));
 	
-	
 	mat4.translate (this.view, this.view, vec3.fromValues (
 		-this.x,
 		-this.y,

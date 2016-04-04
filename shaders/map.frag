@@ -13,7 +13,7 @@ void main ()
 	gl_FragColor = mix (
 		texture2D (uMeadow, vTexCoord),
 		coeff * texture2D (uMeadow, vTexCoord),
-		1.0
+		0.75
 	);
 	gl_FragColor.a = 1.0;
 }

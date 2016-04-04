@@ -122,7 +122,7 @@ Map.prototype.createBuffers = function ()
 			fullNormals [i * 3 + 2] = fullNormals [i * 3 + 5] = fullNormals [i * 3 + 8] = c [2];
 		}
 	}
-		
+	
 	this.vertexBuf = yasc.create.buffer2f (fullVertices);
 	this.heightBuf = yasc.create.buffer1f (fullHeights);
 	this.texCoordBuf = yasc.create.buffer2f (fullTexCoords);
