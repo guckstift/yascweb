@@ -63,7 +63,7 @@ function Map (yasc, size)
 	
 	for (var i=0; i<this.heights.length; i++) {
 		//this.heights [i] = Math.floor (Math.random () * 2) * 0.5;
-		this.heights [i] = Math.random ()
+		this.heights [i] = Math.random () * 0.5
 	}
 	
 	this.createBuffers ();
@@ -122,20 +122,7 @@ Map.prototype.createBuffers = function ()
 			fullNormals [i * 3 + 2] = fullNormals [i * 3 + 5] = fullNormals [i * 3 + 8] = c [2];
 		}
 	}
-	
-	/*
-	for (var x=0; x<this.numTriasPerRow; x++) {
-		for (var y=0; y<this.numTriaRows; y++) {
-			var i = (y * this.numTriasPerRow + x) * 3;
-			var v0 = this.vertices [this.indices [i] * 2 + 0];
-			var v1 = this.vertices [this.indices [i] * 2 + 1];
-			var u = vec3.fromValules (
-				this.vertices [this.indices [i] * 2 + 0];
-			);
-		}
-	}
-	*/
-	
+		
 	this.vertexBuf = yasc.create.buffer2f (fullVertices);
 	this.heightBuf = yasc.create.buffer1f (fullHeights);
 	this.texCoordBuf = yasc.create.buffer2f (fullTexCoords);

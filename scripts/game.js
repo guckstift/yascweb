@@ -13,9 +13,24 @@ function Game (props)
 	this.onCreate = this.onCreate || props.onCreate || $.noop;
 	this.onUpdate = this.onUpdate || props.onUpdate || $.noop;
 	this.onRender = this.onRender || props.onRender || $.noop;
+	this.onMouseMove = this.onMouseMove || props.onMouseMove || $.noop;
+	this.onMouseDown = this.onMouseDown || props.onMouseDown || $.noop;
+	this.onMouseUp = this.onMouseUp || props.onMouseUp || $.noop;
+	this.onMouseWheelDown = this.onMouseWheelDown || props.onMouseWheelDown || $.noop;
+	this.onMouseWheelUp = this.onMouseWheelUp || props.onMouseWheelUp || $.noop;
+	this.onTouchMove = this.onTouchMove || props.onTouchMove || $.noop;
+	this.onTouchStart = this.onTouchStart || props.onTouchStart || $.noop;
 	
 	this.loadingObjs = [];
 	this.cache = {};
+	this.mouseX = 0;
+	this.mouseY = 0;
+	this.mouseRelX = 0;
+	this.mouseRelY = 0;
+	this.touchX = 0;
+	this.touchY = 0;
+	this.touchRelX = 0;
+	this.touchRelY = 0;
 	
 	this.create = new Factory (this);
 	
@@ -78,6 +93,57 @@ Game.prototype.preloadDone = function ()
 	var self = this;
 	
 	this.onCreate ();
+	
+	document.addEventListener ("mousemove", function (eventObject) {
+		self.mouseX = eventObject.clientX;
+		self.mouseY = eventObject.clientY;
+		self.mouseRelX = eventObject.movementX;
+		self.mouseRelY = eventObject.movementY;
+		self.onMouseMove ();
+	});
+	
+	document.addEventListener ("mousedown", function (eventObject) {
+		self.mouseX = eventObject.clientX;
+		self.mouseY = eventObject.clientY;
+		self.mouseRelX = eventObject.movementX;
+		self.mouseRelY = eventObject.movementY;
+		self.onMouseDown ();
+	});
+	
+	document.addEventListener ("mouseup", function (eventObject) {
+		self.mouseX = eventObject.clientX;
+		self.mouseY = eventObject.clientY;
+		self.mouseRelX = eventObject.movementX;
+		self.mouseRelY = eventObject.movementY;
+		self.onMouseUp ();
+	});
+	
+	document.addEventListener ("wheel", function (eventObject) {
+		self.mouseX = eventObject.clientX;
+		self.mouseY = eventObject.clientY;
+		self.mouseRelX = eventObject.movementX;
+		self.mouseRelY = eventObject.movementY;
+		if (eventObject.deltaY > 0) {
+			self.onMouseWheelDown ();
+		}
+		else {
+			self.onMouseWheelUp ();
+		}
+	});
+	
+	document.addEventListener ("touchmove", function (eventObject) {
+		self.touchRelX = eventObject.touches[0].clientX - self.touchX;
+		self.touchRelY = eventObject.touches[0].clientY - self.touchY;
+		self.touchX = eventObject.touches[0].clientX;
+		self.touchY = eventObject.touches[0].clientY;
+		self.onTouchMove (eventObject);
+	});
+	
+	document.addEventListener ("touchstart", function (eventObject) {
+		self.touchX = eventObject.touches[0].clientX;
+		self.touchY = eventObject.touches[0].clientY;
+		self.onTouchStart (eventObject);
+	});
 	
 	setTimeout (this.updateLoop.bind (this), this.updateInterval);
 	requestAnimationFrame (this.renderLoop.bind (this));
@@ -174,5 +240,15 @@ Game.prototype.drawTrianglesIndexed = function (count, indexBuf)
 	if (indexBuf.type == "ushort") {
 		this.gl.drawElements (this.gl.TRIANGLES, count * 3, this.gl.UNSIGNED_SHORT, 0);
 	}
+}
+
+Game.prototype.lockPointer = function ()
+{
+	this.canvas.requestPointerLock ();
+}
+
+Game.prototype.releasePointer = function ()
+{
+	document.exitPointerLock ();
 }
 

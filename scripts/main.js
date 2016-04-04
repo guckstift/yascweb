@@ -15,7 +15,7 @@ function main ()
 function onWindowResize ()
 {
 	yasc.resize ([
-		Math.max (0, $window.width () - 256),
+		$window.width (),
 		$window.height ()
 	]);
 }
