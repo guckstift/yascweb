@@ -20,6 +20,12 @@ function Map (yasc, size)
 	this.vertices = new Float32Array (this.numVerts * 2);
 	this.heights = new Float32Array (this.numVerts);
 	this.indices = new Uint16Array (this.numTrias * 3);
+	this.terra = new Uint8Array (this.numVerts);
+	
+	this.setTerra (1, 0, 1);
+	this.setTerra (2, 0, 1);
+	this.setTerra (1, 1, 1);
+	this.setTerra (5, 5, 2);
 	
 	for (var x=0; x<this.numVertsPerRow; x++) {
 		for (var y=0; y<this.numVertRows; y++) {
@@ -63,7 +69,9 @@ function Map (yasc, size)
 	
 	for (var i=0; i<this.heights.length; i++) {
 		//this.heights [i] = Math.floor (Math.random () * 2) * 0.5;
+		var randNum = Math.floor (Math.random () * 3);
 		this.heights [i] = Math.random () * 0.5
+		this.terra [i] = randNum;
 	}
 	
 	this.createBuffers ();
@@ -75,11 +83,13 @@ Map.prototype.createBuffers = function ()
 	var fullHeights = new Float32Array (this.numTrias * 3);
 	var fullTexCoords = new Float32Array (this.numTrias * 3 * 2);
 	var fullNormals = new Float32Array (this.numTrias * 3 * 3);
+	var fullTerra = new Uint8Array (this.numTrias * 3);
 	
 	for (var x=0; x<this.numTriasPerRow; x++)
 	{
 		for (var y=0; y<this.numTriaRows; y++)
 		{
+			var k = y * this.numTriasPerRow + x;
 			var i = (y * this.numTriasPerRow + x) * 3;
 			var vs = Array (3);
 			
@@ -93,6 +103,7 @@ Map.prototype.createBuffers = function ()
 				fullVertices [j * 2 + 0] = vs [v][0];
 				fullVertices [j * 2 + 1] = vs [v][1];
 				fullHeights [j] = vs [v][2];
+				fullTerra [j] = this.terra [this.indices [j]];
 			}
 			
 			if ((x+y) % 2 == 0) {
@@ -127,6 +138,7 @@ Map.prototype.createBuffers = function ()
 	this.heightBuf = yasc.create.buffer1f (fullHeights);
 	this.texCoordBuf = yasc.create.buffer2f (fullTexCoords);
 	this.normalBuf = yasc.create.buffer3f (fullNormals);
+	this.terraBuf = yasc.create.buffer1ub (fullTerra);
 }
 
 Map.prototype.draw = function ()
@@ -137,8 +149,11 @@ Map.prototype.draw = function ()
 	this.yasc.mapProg.enableAttributeArray ("aHeight", this.heightBuf);
 	this.yasc.mapProg.enableAttributeArray ("aTexCoord", this.texCoordBuf);
 	this.yasc.mapProg.enableAttributeArray ("aNormal", this.normalBuf);
+	this.yasc.mapProg.enableAttributeArray ("aTerra", this.terraBuf);
 	
+	this.yasc.mapProg.enableTexture ("uGrassland", this.yasc.cache ["images/grassland.png"]);
 	this.yasc.mapProg.enableTexture ("uMeadow", this.yasc.cache ["images/meadow.png"]);
+	this.yasc.mapProg.enableTexture ("uBeach", this.yasc.cache ["images/beach.png"]);
 	this.yasc.mapProg.setUniformVec ("uSun", this.yasc.sun);
 	
 	this.yasc.drawTriangles (this.numTrias);
@@ -146,4 +161,8 @@ Map.prototype.draw = function ()
 	this.yasc.mapProg.disableTextures ();
 }
 
+Map.prototype.setTerra = function (x, y, t)
+{
+	this.terra [y * this.numVertsPerRow + x] = t;
+}
 

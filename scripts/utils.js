@@ -21,13 +21,3 @@ function fileExt (filename)
 	return filename.split (".").pop ();
 }
 
-function radians (d)
-{
-	return d * Math.PI / 180;
-}
-
-function degrees (r)
-{
-	return r * 180 / Math.PI;
-}
-

@@ -13,9 +13,15 @@ function Buffer (game, data, type, components, isIbo)
 	
 	if (this.type == "float" || this.data instanceof Float32Array) {
 		this.arrayType = Float32Array;
+		this.glType = gl.FLOAT;
+	}
+	else if (this.type == "ubyte" || this.data instanceof Uint8Array) {
+		this.arrayType = Uint8Array;
+		this.glType = gl.UNSIGNED_BYTE;
 	}
 	else if (this.type == "ushort" || this.data instanceof Uint16Array) {
 		this.arrayType = Uint16Array;
+		this.glType = gl.UNSIGNED_SHORT;
 	}
 
 	if (!this.data instanceof this.arrayType) {

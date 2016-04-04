@@ -3,7 +3,7 @@ function MapCamera (yasc)
 {
 	Camera.call (this, yasc);
 	
-	this.zoom = 16;
+	this.zoom = 64;
 	this.x = 0;
 	this.y = 0;
 }
@@ -24,11 +24,11 @@ MapCamera.prototype.update = function ()
 		-this.x,
 		-this.y,
 	0));
-	mat4.rotateX (this.view, this.view, Math.acos (1 / Math.sqrt (3)));
+	mat4.rotateX (this.view, this.view, acos (1 / sqrt (3)));
 }
 
 MapCamera.prototype.setZoom = function (zoom)
 {
-	this.zoom = Math.min (512, Math.max (16, zoom));
+	this.zoom = clamp (16, 512, zoom);
 }
 

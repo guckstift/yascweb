@@ -70,14 +70,12 @@ Program.prototype.enableAttributeArray = function (attribute, buffer)
 	buffer.bind ();
 	gl.enableVertexAttribArray (attributeLocation);
 
-	if (buffer.type == "float") {
-		gl.vertexAttribPointer (
-			attributeLocation,
-			buffer.components,
-			gl.FLOAT,
-			false, 0, 0
-		);
-	}
+	gl.vertexAttribPointer (
+		attributeLocation,
+		buffer.components,
+		buffer.glType,
+		false, 0, 0
+	);
 }
 
 Program.prototype.setUniformMat4f = function (uniform, value)

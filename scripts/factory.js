@@ -46,6 +46,11 @@ Factory.prototype.buffer3f = function (data)
 	return this.buffer (data, "float", 3, false);
 }
 
+Factory.prototype.buffer1ub = function (data)
+{
+	return this.buffer (data, "ubyte", 1, false);
+}
+
 Factory.prototype.indexBuffer1us = function (data)
 {
 	return this.buffer (data, "ushort", 1, true);

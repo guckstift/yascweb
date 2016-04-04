@@ -18,7 +18,10 @@ Yasc.prototype = Object.create (Game.prototype, {constructor: Game});
 
 Yasc.prototype.onPreload = function ()
 {
+	this.load ("images/grassland.png");
 	this.load ("images/meadow.png");
+	this.load ("images/beach.png");
+	
 	this.load ("shaders/map.vert");
 	this.load ("shaders/map.frag");
 }
@@ -28,7 +31,7 @@ Yasc.prototype.onCreate = function ()
 	this.mapProg = this.create.program (["shaders/map.vert", "shaders/map.frag"]);
 	this.mapCam = new MapCamera (this);
 	//this.map = new Map (this, 180);
-	this.map = new Map (this, 32);
+	this.map = new Map (this, 16);
 	this.mapCam.x = this.map.size / 2;
 	this.mapCam.y = this.map.size / 2;
 	this.sun = vec3.transformMat4 (
