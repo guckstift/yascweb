@@ -3,7 +3,7 @@ function MapCamera (yasc)
 {
 	Camera.call (this, yasc);
 	
-	this.zoom = 128;
+	this.zoom = 16;
 	this.x = 0;
 	this.y = 0;
 }

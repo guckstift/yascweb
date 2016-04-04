@@ -27,9 +27,10 @@ Yasc.prototype.onCreate = function ()
 {
 	this.mapProg = this.create.program (["shaders/map.vert", "shaders/map.frag"]);
 	this.mapCam = new MapCamera (this);
-	this.mapCam.x = 16;
-	this.mapCam.y = 16;
+	//this.map = new Map (this, 180);
 	this.map = new Map (this, 32);
+	this.mapCam.x = this.map.size / 2;
+	this.mapCam.y = this.map.size / 2;
 	this.sun = vec3.transformMat4 (
 		vec3.create (),
 		vec3.fromValues (0, 0, -1),
