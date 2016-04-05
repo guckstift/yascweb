@@ -31,6 +31,19 @@ function clamp (minval, maxval, val)
 	return max (minval, min (maxval, val));
 }
 
+function nextPot (n)
+{
+	n--;
+	n |= n >> 1;
+	n |= n >> 2;
+	n |= n >> 4;
+	n |= n >> 8;
+	n |= n >> 16;
+	n++;
+	
+	return n;
+}
+
 function _Vec2 (x, y)
 {
 	this.data = vec2.fromValues (

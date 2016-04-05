@@ -26,34 +26,59 @@ Factory.prototype.texture = function (img)
 	return new Texture (this.game, img);
 }
 
-Factory.prototype.buffer = function (data, type, components, isIbo)
+Factory.prototype.buffer = function (data, components, type, isIbo)
 {
-	return new Buffer (this.game, data, type, components, isIbo);
+	return new Buffer (this.game, data, components, type, isIbo);
 }
 
 Factory.prototype.buffer1f = function (data)
 {
-	return this.buffer (data, "float", 1, false);
+	return this.buffer (data, 1, "float", false);
 }
 
 Factory.prototype.buffer2f = function (data)
 {
-	return this.buffer (data, "float", 2, false);
+	return this.buffer (data, 2, "float", false);
 }
 
 Factory.prototype.buffer3f = function (data)
 {
-	return this.buffer (data, "float", 3, false);
+	return this.buffer (data, 3, "float", false);
 }
 
 Factory.prototype.buffer1ub = function (data)
 {
-	return this.buffer (data, "ubyte", 1, false);
+	return this.buffer (data, 1, "ubyte", false);
+}
+
+Factory.prototype.buffer2ub = function (data)
+{
+	return this.buffer (data, 2, "ubyte", false);
+}
+
+Factory.prototype.buffer3ub = function (data)
+{
+	return this.buffer (data, 3, "ubyte", false);
+}
+
+Factory.prototype.buffer1us = function (data)
+{
+	return this.buffer (data, 1, "ushort", false);
+}
+
+Factory.prototype.buffer2us = function (data)
+{
+	return this.buffer (data, 2, "ushort", false);
+}
+
+Factory.prototype.buffer3us = function (data)
+{
+	return this.buffer (data, 3, "ushort", false);
 }
 
 Factory.prototype.indexBuffer1us = function (data)
 {
-	return this.buffer (data, "ushort", 1, true);
+	return this.buffer (data, 1, "ushort", true);
 }
 
 Factory.prototype.camera = function ()

@@ -103,3 +103,10 @@ Program.prototype.setUniformVec = function (uniform, value)
 	}
 }
 
+Program.prototype.setUniform = function (uniform, value)
+{
+	var gl = this.game.gl;
+	
+	gl.uniform1f (this.getUniform (uniform), value);
+}
+

@@ -29,6 +29,6 @@ MapCamera.prototype.update = function ()
 
 MapCamera.prototype.setZoom = function (zoom)
 {
-	this.zoom = clamp (16, 512, zoom);
+	this.zoom = clamp (16, 1024, zoom);
 }
 
