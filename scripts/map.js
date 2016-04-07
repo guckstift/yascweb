@@ -3,7 +3,18 @@ $(mapInit);
 
 function mapInit ()
 {
-	Map.triaHeight = sin (radians (60));
+	/*
+	a² + b² = c²
+	(1/2)² + h² = 1²
+	1/4 + h² = 1
+	h² = 1 - 1/4
+	h = sqrt (1 - 1/4)
+	h = sqrt (3/4)
+	h = sqrt (3) / sqrt (4)
+	h = sqrt (3) / 2
+	*/
+	Map.triaHeight = sqrt (3) / 2;
+	Map.texZoom = 2.0;
 }
 
 function Map (yasc, size)
@@ -17,10 +28,13 @@ function Map (yasc, size)
 	this.numTriaRows = this.size * 2;
 	this.numTrias = this.numTriaRows * this.numTriasPerRow;
 	
+	this.prog = this.yasc.mapProg;
+	
 	this.mapCoords = new Uint16Array (this.numVerts * 2);
 	this.normals = new Float32Array (this.numVerts * 3);
 	this.heights = new Float32Array (this.numVerts);
 	this.terra = new Uint8Array (this.numVerts);
+	this.objMap = new Uint8Array (this.numVerts);
 	this.indices = new Uint16Array (this.numTrias * 3);
 	
 	for (var x=0; x<this.numVertsPerRow; x++) {
@@ -64,35 +78,14 @@ function Map (yasc, size)
 	}
 	
 	for (var i=0; i<this.heights.length; i++) {
-		this.heights [i] = Math.random () * 0.5;
-		//this.heights [i] = floor (Math.random () * 2) * 0.5;
+		this.heights [i] = floor (Math.random () * 1.25) * 0.5;
 		this.terra [i] = floor (Math.random () * 3);
+		this.objMap [i] = floor (Math.random () * 1.0625);
 	}
-	
-	this.setHeight (8, 8, 0.5);
-	
+		
 	this.createBuffers ();
 	
 	var gl = this.yasc.gl;
-	
-	/*
-	this.normalTexture = new Texture (yasc,
-		this.normalBytes, 1024, this.normalTextureHeight //this.numVertsPerRow, this.numVertRows
-	);
-	/*
-	this.normalTexture = gl.createTexture ();
-	gl.bindTexture (gl.TEXTURE_2D, this.normalTexture);
-	gl.texImage2D (
-		gl.TEXTURE_2D, 0, gl.RGB,
-		this.numVertsPerRow,
-		this.numVertRows,
-		0, gl.RGB, gl.UNSIGNED_BYTE, this.normalBytes
-	);
-	gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-	gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-	gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-	gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-	*/
 }
 
 Map.prototype.createBuffers = function ()
@@ -146,15 +139,28 @@ Map.prototype.draw = function ()
 	this.yasc.mapProg.enableAttributeArray ("aTerra", this.terraBuf);
 	this.yasc.mapProg.enableAttributeArray ("aMapCoord", this.mapCoordBuf);
 	
-	this.yasc.mapProg.enableTexture ("uGrassland", this.yasc.cache ["images/grassland.png"]);
-	this.yasc.mapProg.enableTexture ("uMeadow", this.yasc.cache ["images/meadow.png"]);
-	this.yasc.mapProg.enableTexture ("uBeach", this.yasc.cache ["images/beach.png"]);
+	this.prog.enableTextures ("uTextures", [
+		this.yasc.cache ["images/grassland.png"],
+		this.yasc.cache ["images/meadow.png"],
+		this.yasc.cache ["images/beach.png"],
+	]);
 	
 	this.yasc.mapProg.setUniformVec ("uSun", this.yasc.sun);
+	this.yasc.mapProg.setUniform ("uTexZoom", Map.texZoom);
 	
 	this.yasc.drawTrianglesIndexed (this.numTrias, this.indexBuf);
 	
 	this.yasc.mapProg.disableTextures ();
+	
+	for (var x=0; x<this.numVertsPerRow; x++) {
+		for (var y=0; y<this.numVertRows; y++) {
+			var i = this.linearCoord (x, y);
+			var vm = this.getVertex (x, y);
+			if (this.objMap [i] == 1) {
+				this.yasc.cache["meshes/tree.json"].draw (vm);
+			}
+		}
+	}
 }
 
 Map.prototype.getTerra = function (x, y)

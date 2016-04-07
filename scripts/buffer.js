@@ -27,7 +27,7 @@ function Buffer (game, data, components, type, isIbo)
 		throw "Missing type";
 	}
 
-	if (!this.data instanceof this.arrayType) {
+	if (!(this.data instanceof this.arrayType)) {
 		this.data = new this.arrayType (this.data);
 	}
 	

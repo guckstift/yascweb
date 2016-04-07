@@ -24,6 +24,8 @@ Yasc.prototype.onPreload = function ()
 	
 	this.load ("shaders/map.vert");
 	this.load ("shaders/map.frag");
+	
+	this.load ("meshes/tree.json");
 }
 
 Yasc.prototype.onCreate = function ()
@@ -31,17 +33,15 @@ Yasc.prototype.onCreate = function ()
 	this.mapProg = this.create.program (["shaders/map.vert", "shaders/map.frag"]);
 	this.mapCam = new MapCamera (this);
 	//this.map = new Map (this, 180);
-	this.map = new Map (this, 16);
+	this.map = new Map (this, 64);
 	this.mapCam.x = this.map.size / 2;
 	this.mapCam.y = this.map.size / 2;
-	this.sun = vec3.transformMat4 (
-		vec3.create (),
-		vec3.fromValues (0, 0, -1),
-		mat4.rotateX (mat4.create (),
-			mat4.rotateZ (mat4.create (), mat4.create (), -radians (45)),
-			-radians (45)
-		)
-	);
+	this.sun = vec3.fromValues (0, 0, -1);
+	
+	var sunTransform = mat4.create ();
+	mat4.rotateZ (sunTransform, sunTransform, radians (30));
+	mat4.rotateX (sunTransform, sunTransform, radians (-45));
+	vec3.transformMat4 (this.sun, this.sun, sunTransform);
 }
 
 Yasc.prototype.onUpdate = function ()
@@ -111,8 +111,8 @@ Yasc.prototype.onTouchStart = function (e)
 
 Yasc.prototype.moveCamera = function (relX, relY)
 {
-	this.camera.x -= relX / this.camera.zoom;
-	this.camera.y -= relY / this.camera.zoom;
+	this.camera.x += relX / this.camera.zoom;
+	this.camera.y += relY / this.camera.zoom;
 }
 
 Yasc.prototype.zoomInCamera = function ()

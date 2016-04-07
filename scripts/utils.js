@@ -4,6 +4,11 @@ function loadText (url, callback)
 	return $.get (url, {}, callback, "text");
 }
 
+function loadJson (url, callback)
+{
+	return $.getJSON (url, callback);
+}
+
 function loadImage (url, callback)
 {
 	return $.Deferred (function (deferred) {

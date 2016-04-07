@@ -56,6 +56,22 @@ Program.prototype.enableTexture = function (uniform, texture)
 	this.nextTexUnit ++;
 }
 
+Program.prototype.enableTextures = function (uniform, textures)
+{
+	var gl = this.game.gl;
+
+	_.each (textures, function (tex, i) {
+		tex.bind (this.nextTexUnit + i);
+	}, this);
+	
+	gl.uniform1iv (
+		this.getUniform (uniform),
+		_.range (this.nextTexUnit, textures.length)
+	);
+	
+	this.nextTexUnit += textures.length;
+}
+
 Program.prototype.disableTextures = function ()
 {
 	this.nextTexUnit = 0;

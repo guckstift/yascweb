@@ -47,6 +47,13 @@ function Game (props)
 	
 	this.gl = this.canvas.getContext ("webgl", {antialias: false});
 	
+	this.gl.enable (this.gl.CULL_FACE);
+	this.gl.cullFace (this.gl.BACK);
+	this.gl.frontFace (this.gl.CW);
+	this.gl.enable (this.gl.DEPTH_TEST);
+	this.gl.depthFunc (this.gl.GREATER);
+	this.gl.clearDepth (0);
+	
 	this.cache ["standard.vert"] = this.create.shader ("standard.vert", Game.stdVertShaderSource);
 	this.cache ["standard.frag"] = this.create.shader ("standard.frag", Game.stdFragShaderSource);
 	
@@ -84,6 +91,9 @@ Game.prototype.launch = function ()
 {
 	var self = this;
 	
+	this.load ("shaders/mesh.vert");
+	this.load ("shaders/mesh.frag");
+	
 	this.onPreload ();
 	
 	$.when.apply ($, this.loadingObjs).done (this.preloadDone.bind (this));
@@ -94,6 +104,8 @@ Game.prototype.launch = function ()
 Game.prototype.preloadDone = function ()
 {
 	var self = this;
+	
+	this.meshProg = this.create.program (["shaders/mesh.vert", "shaders/mesh.frag"]);
 	
 	this.onCreate ();
 	
@@ -220,6 +232,16 @@ Game.prototype.load = function (url)
 	else if (fileExt (url) == "vert" || fileExt (url) == "frag") {
 		var loadingObj = loadText (url, function (text) {
 			self.cache [url] = self.create.shader (url, text);
+		});
+	}
+	else if (fileExt (url) == "json") {
+		var loadingObj = loadJson (url, function (json) {
+			if (json.jsonType == "mesh") {
+				self.cache [url] = new Mesh (self, json);
+			}
+			else {
+				self.cache [url] = json;
+			}
 		});
 	}
 	else {
