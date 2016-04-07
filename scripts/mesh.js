@@ -2,6 +2,7 @@
 function Mesh (game, desc)
 {
 	this.game = game;
+	this.bbox = desc.bbox;
 	this.vertices = desc.vertices;
 	this.normals = desc.normals;
 	
@@ -22,6 +23,11 @@ function Mesh (game, desc)
 Mesh.prototype.draw = function (pos)
 {
 	pos = pos || vec3.create ();
+	
+	this.game.meshProg.enableAttributeArray ("aPos", this.vertBuf);
+	this.game.meshProg.enableAttributeArray ("aNormal", this.normalBuf);
+	
+	this.game.meshProg.setUniformVec ("uSun", this.game.sun); // TODO: pull this out from yasc
 	
 	_.each (this.groups, function (group, i) {
 		group.draw (pos)

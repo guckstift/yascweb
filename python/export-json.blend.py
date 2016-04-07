@@ -7,6 +7,7 @@ prec = 8
 
 outObj = {
 	"jsonType" : "mesh",
+	"bbox" : [],
 	"vertices" : [],
 	"normals" : [],
 	"groups" : [],
@@ -20,6 +21,9 @@ for obj in bpy.data.objects:
 		verts = mesh.vertices
 		polys = mesh.polygons
 		mats = mesh.materials
+		
+		for comp in obj.dimensions:
+			outObj["bbox"].append (comp)
 		
 		for vert in verts:
 			for i, comp in enumerate (vert.co):

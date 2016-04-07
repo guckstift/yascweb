@@ -152,12 +152,23 @@ Map.prototype.draw = function ()
 	
 	this.yasc.mapProg.disableTextures ();
 	
+	this.yasc.setProgram (this.yasc.meshProg);
+	
 	for (var x=0; x<this.numVertsPerRow; x++) {
 		for (var y=0; y<this.numVertRows; y++) {
 			var i = this.linearCoord (x, y);
 			var vm = this.getVertex (x, y);
-			if (this.objMap [i] == 1) {
-				this.yasc.cache["meshes/tree.json"].draw (vm);
+			var screenVert = this.getScreenVertex (x, y);
+			var mesh = this.yasc.cache["meshes/tree.json"];
+			if (
+				screenVert [0] >= -mesh.bbox[0] * this.yasc.camera.zoom &&
+				screenVert [0] <= this.yasc.size[0] + mesh.bbox[0] * this.yasc.camera.zoom &&
+				screenVert [1] >= 0 &&
+				screenVert [1] <= this.yasc.size[1] + mesh.bbox[2] * this.yasc.camera.zoom
+			) {
+				if (this.objMap [i] == 1) {
+					this.yasc.cache["meshes/tree.json"].draw (vm);
+				}
 			}
 		}
 	}
@@ -198,6 +209,15 @@ Map.prototype.getVertex = function (x, y)
 		y * Map.triaHeight,
 		this.heights [i]
 	);
+}
+
+Map.prototype.getScreenVertex = function (x, y)
+{
+	var res = this.getVertex (x, y);
+	return [
+		(x + (y % 2) * 0.5 - this.yasc.camera.x) * this.yasc.camera.zoom + this.yasc.size[0]/2,
+		(y / 2 - this.yasc.camera.y) * this.yasc.camera.zoom + this.yasc.size[1]/2,
+	];
 }
 
 Map.prototype.linearCoord = function (x, y)
